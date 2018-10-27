@@ -297,15 +297,15 @@
                 app:layout_columnWeight="1"
                 app:layout_rowWeight="1" />
 
-            <ImageButton
-                android:id="@+id/ibtn_3_4"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:background="#c9af98"
-                android:clickable="true"
-                android:focusable="true"
-                app:layout_columnWeight="1"
-                app:layout_rowWeight="1" />
+        <ImageButton
+            android:id="@+id/ibtn_3_4"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:background="#c9af98"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_columnWeight="1"
+            app:layout_rowWeight="1" />
 
             <ImageButton
                 android:id="@+id/ibtn_3_5"
