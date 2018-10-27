@@ -1,5 +1,7 @@
 package com.example.guanghuili.checkers;
 
+import java.util.ArrayList;
+
 public class Checker {
     private int row;
     private int column;
@@ -35,7 +37,7 @@ public class Checker {
         this.crownStatus = crownStatus;
     }
 
-    public int[][] getMove(Checker[][] checkerList) {
+    public ArrayList<int[]> getMove(Checker[][] checkerList) {
         return null;
     }
 }

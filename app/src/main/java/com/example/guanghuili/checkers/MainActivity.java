@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 
@@ -13,8 +14,8 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private ImageButton [][] imageButtonList;
     private Checker [][] checkerList;
-    private int [][] possibleMove;
-    private boolean turn= false;
+    private ArrayList<int[]> possibleMove;
+    private boolean turn = true;
     private boolean secondClick = false;
 
     //row 1
@@ -204,19 +205,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-/*
+        //Log.d("Clicked", "Button clicked");
         for(int r = 0; r < imageButtonList.length; r++){
             for(int c = 0; c < imageButtonList[r].length; c++){
-                if(view.getId() == imageButtonList[r][c].getId()){//get the r and c of the ibtn clicked
-                    if(checkerList[r][c] != null){//if the corresponding location in the checkerList has a checker
-                        if(checkerList[r][c] instanceof BlackChecker){//if clicked checker is a blackChecker
-                            possibleMove = checkerList[r][c].getMove(checkerList);
+                if(imageButtonList[r][c] != null) {//if imageButtonList[r][c] is not null
+                    if (view.getId() == imageButtonList[r][c].getId()) {//get the r and c of the ibtn clicked
+                        if (checkerList[r][c] != null) {//if the corresponding location in the checkerList has a checker
+                            if (checkerList[r][c] instanceof BlackChecker) {//if clicked checker is a blackChecker
+                                possibleMove = checkerList[r][c].getMove(checkerList);//get the possibleMove from BlackChecker class
+                                for (int i = 0; i < possibleMove.size(); i++) {//go through the possibleMove
+                                    int row = possibleMove.get(i)[0];//get each row
+                                    int column = possibleMove.get(i)[1];//get each column
+                                    imageButtonList[row][column].setClickable(true);//make the possible places clickable
+                                    imageButtonList[row][column].setBackgroundColor(Color.WHITE);
+                                }
+                            }
                         }
                     }
                 }
             }
         }
-        */
+
     }
 
 
@@ -226,9 +235,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 for (int c = 0; c < checkerList[r].length; c++) {
                     if (checkerList[r][c] instanceof RedChecker) {//if the checker is red (disable all the redCheckers)
                         imageButtonList[r][c].setClickable(false);
-                        //imageButtonList[r][c].setBackgroundColor(Color.BLACK);
+                        imageButtonList[r][c].setBackgroundColor(Color.BLACK);
                     }
-                    if(checkerList[r][c] instanceof BlackChecker){//disable the unmovable blackCheckers
+                    else if(checkerList[r][c] instanceof BlackChecker){//disable the unmovable blackCheckers
                         if(r == 0){//if the blackChecker is at row 0 (crown)
                             imageButtonList[r][c].setClickable(true);
                         }
@@ -236,20 +245,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             if (c == 0){
                                 if(checkerList[r - 1][c + 1] instanceof BlackChecker) { //if the blackChecker is at column 0 and there is one blackChecker at upper right
                                     imageButtonList[r][c].setClickable(false);
-                                    //imageButtonList[r][c].setBackgroundColor(Color.BLACK);
+                                    imageButtonList[r][c].setBackgroundColor(Color.BLACK);
                                 }
                             }
                             else if (c == 7){
                                 if(checkerList[r - 1][c - 1] instanceof BlackChecker) {//if the blackChecker is at column 7 and there is one blackChecker at upper left
                                     imageButtonList[r][c].setClickable(false);
-                                    //imageButtonList[r][c].setBackgroundColor(Color.BLACK);
+                                    imageButtonList[r][c].setBackgroundColor(Color.BLACK);
                                 }
                             } else {//if the blackChecker is located at column 1 - 6
                                 if (checkerList[r - 1][c - 1] instanceof BlackChecker && checkerList[r - 1][c + 1] instanceof BlackChecker) {//if there are blackCheckers on both upper left and right
                                     imageButtonList[r][c].setClickable(false);
-                                    //imageButtonList[r][c].setBackgroundColor(Color.BLACK);
+                                    imageButtonList[r][c].setBackgroundColor(Color.BLACK);
                                 }
                             }
+                        }
+                    }
+                    else{//if the checkerList updates ex: one black checker died, need to update the corresponding image button to not clickable
+                        if(imageButtonList[r][c] != null) {
+                            imageButtonList[r][c].setClickable(false);
+                            imageButtonList[r][c].setBackgroundColor(Color.BLACK);
                         }
                     }
                 }
@@ -260,34 +275,50 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 for (int c = 0; c < checkerList[r].length; c++) {
                     if (checkerList[r][c] instanceof BlackChecker) {//if the checker is black (disable all the blackCheckers)
                         imageButtonList[r][c].setClickable(false);
-                        //imageButtonList[r][c].setBackgroundColor(Color.BLACK);
+                        imageButtonList[r][c].setBackgroundColor(Color.BLACK);
                     }
-                    if(checkerList[r][c] instanceof RedChecker) {//disable the unmovable red Checkers
+                    else if(checkerList[r][c] instanceof RedChecker) {//disable the unmovable red Checkers
                         if (r == 7) {//if the red checker is at row 7 (crown)
                             imageButtonList[r][c].setClickable(true);
                         } else {
                             if (c == 0) {
                                 if (checkerList[r + 1][c + 1] instanceof RedChecker) { //if the red Checker is at column 0 and there is one redChecker at upper right
                                     imageButtonList[r][c].setClickable(false);
-                                    //imageButtonList[r][c].setBackgroundColor(Color.BLACK);
+                                    imageButtonList[r][c].setBackgroundColor(Color.BLACK);
                                 }
                             } else if (c == 7) {
                                 if (checkerList[r + 1][c - 1] instanceof RedChecker) {//if the blackChecker is at column 7 and there is one blackChecker at upper left
                                     imageButtonList[r][c].setClickable(false);
-                                    //imageButtonList[r][c].setBackgroundColor(Color.BLACK);
+                                    imageButtonList[r][c].setBackgroundColor(Color.BLACK);
                                 }
                             } else {//if the blackChecker is located at column 1 - 6
                                 if (checkerList[r + 1][c - 1] instanceof RedChecker && checkerList[r + 1][c + 1] instanceof RedChecker) {//if there are blackCheckers on both upper left and right
                                     imageButtonList[r][c].setClickable(false);
-                                    //imageButtonList[r][c].setBackgroundColor(Color.BLACK);
+                                    imageButtonList[r][c].setBackgroundColor(Color.BLACK);
                                 }
                             }
                         }
 
                     }
+                    else{//if the checkerList updates ex: one red checker died, need to update the corresponding image button to not clickable
+                        if(imageButtonList[r][c] != null) {
+                            imageButtonList[r][c].setClickable(false);
+                            imageButtonList[r][c].setBackgroundColor(Color.BLACK);
+                        }
+                    }
                 }
             }
         }
 
+    }
+
+    public void enableAllButtons(){
+        for(int r = 0; r < imageButtonList.length; r++) {
+            for (int c = 0; c < imageButtonList[r].length; c++) {
+                if(imageButtonList[r][c] != null){
+                    imageButtonList[r][c].setClickable(true);
+                }
+            }
+        }
     }
 }
