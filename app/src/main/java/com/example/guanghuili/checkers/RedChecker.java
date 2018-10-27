@@ -5,6 +5,7 @@ public class RedChecker extends Checker {
         super(row,column);
     }
 
+    @Override
     public int [][] getMove(Checker[][] checkerList){
         if(isCrownStatus() == false){
 

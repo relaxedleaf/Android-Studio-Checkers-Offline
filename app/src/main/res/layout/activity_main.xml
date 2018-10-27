@@ -299,7 +299,7 @@
 
         <ImageButton
             android:id="@+id/ibtn_3_4"
-            android:layout_width="wrap_content"
+            android:layout_width="20dp"
             android:layout_height="20dp"
             android:background="#c9af98"
             android:clickable="true"

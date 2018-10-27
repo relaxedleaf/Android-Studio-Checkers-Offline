@@ -34,4 +34,8 @@ public class Checker {
     public void setCrownStatus(boolean crownStatus) {
         this.crownStatus = crownStatus;
     }
+
+    public int[][] getMove(Checker[][] checkerList) {
+        return null;
+    }
 }

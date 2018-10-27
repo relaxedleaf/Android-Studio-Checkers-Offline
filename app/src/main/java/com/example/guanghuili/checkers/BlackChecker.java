@@ -5,6 +5,7 @@ public class BlackChecker extends Checker {
             super(row,column);
     }
 
+    @Override
     public int [][] getMove(Checker[][] checkerList){
         if(isCrownStatus() == false){
 
@@ -13,6 +14,6 @@ public class BlackChecker extends Checker {
 
         }
 
-        return null;
+        return new int[5][6];
     }
 }

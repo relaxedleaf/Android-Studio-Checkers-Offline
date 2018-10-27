@@ -1,5 +1,6 @@
 package com.example.guanghuili.checkers;
 
+import android.graphics.Color;
 import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,7 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-//row 1
+    private ImageButton [][] imageButtonList;
+    private Checker [][] checkerList;
+    private int [][] possibleMove;
+    private boolean turn= false;
+    private boolean secondClick = false;
+
+    //row 1
     private ImageButton ibtn_0_0;
     private ImageButton ibtn_0_1;
     private ImageButton ibtn_0_2;
@@ -87,10 +94,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ImageButton ibtn_7_6;
     private ImageButton ibtn_7_7;
 
-    private ImageButton [][] imageButtonList;
-    private Checker [][] checkerList;
-
-    private int turn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -175,14 +178,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ibtn_7_7 = findViewById(R.id.ibtn_7_7);
 
         imageButtonList = new ImageButton[][]
-                            {{ibtn_0_0, ibtn_0_1, ibtn_0_2, ibtn_0_3, ibtn_0_4, ibtn_0_5, ibtn_0_6, ibtn_0_7},
-                             {ibtn_1_0, ibtn_1_1, ibtn_1_2, ibtn_1_3, ibtn_1_4, ibtn_1_5, ibtn_1_6, ibtn_1_7},
-                             {ibtn_2_0, ibtn_2_1, ibtn_2_2, ibtn_2_3, ibtn_2_4, ibtn_2_5, ibtn_2_6, ibtn_2_7},
-                             {ibtn_3_0, ibtn_3_1, ibtn_3_2, ibtn_3_3, ibtn_3_4, ibtn_3_5, ibtn_3_6, ibtn_3_7},
-                             {ibtn_4_0, ibtn_4_1, ibtn_4_2, ibtn_4_3, ibtn_4_4, ibtn_4_5, ibtn_4_6, ibtn_4_7},
-                             {ibtn_5_0, ibtn_5_1, ibtn_5_2, ibtn_5_3, ibtn_5_4, ibtn_5_5, ibtn_5_6, ibtn_5_7},
-                             {ibtn_6_0, ibtn_6_1, ibtn_6_2, ibtn_6_3, ibtn_6_4, ibtn_6_5, ibtn_6_6, ibtn_6_7},
-                             {ibtn_7_0, ibtn_7_1, ibtn_7_2, ibtn_7_3, ibtn_7_4, ibtn_7_5, ibtn_7_6, ibtn_7_7}};
+                            {{null, ibtn_0_1, null, ibtn_0_3, null, ibtn_0_5, null, ibtn_0_7},
+                             {ibtn_1_0, null, ibtn_1_2, null, ibtn_1_4, null, ibtn_1_6, null},
+                             {null, ibtn_2_1, null, ibtn_2_3, null, ibtn_2_5, null, ibtn_2_7},
+                             {ibtn_3_0, null, ibtn_3_2, null, ibtn_3_4, null, ibtn_3_6, null},
+                             {null, ibtn_4_1, null, ibtn_4_3, null, ibtn_4_5, null, ibtn_4_7},
+                             {ibtn_5_0, null, ibtn_5_2, null, ibtn_5_4, null, ibtn_5_6, null},
+                             {null, ibtn_6_1, null, ibtn_6_3, null, ibtn_6_5, null, ibtn_6_7},
+                             {ibtn_7_0, null, ibtn_7_2, null, ibtn_7_4, null, ibtn_7_6, null}};
 
         checkerList = new Checker[][]
                             {{null, new RedChecker(0,1), null, new RedChecker(0,3), null, new RedChecker(0,5), null, new RedChecker(0,7)},
@@ -196,15 +199,95 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             };
 
         disableButtons();
-        }
+    }
 
 
     @Override
     public void onClick(View view) {
-
+/*
+        for(int r = 0; r < imageButtonList.length; r++){
+            for(int c = 0; c < imageButtonList[r].length; c++){
+                if(view.getId() == imageButtonList[r][c].getId()){//get the r and c of the ibtn clicked
+                    if(checkerList[r][c] != null){//if the corresponding location in the checkerList has a checker
+                        if(checkerList[r][c] instanceof BlackChecker){//if clicked checker is a blackChecker
+                            possibleMove = checkerList[r][c].getMove(checkerList);
+                        }
+                    }
+                }
+            }
+        }
+        */
     }
 
+
     public void disableButtons(){
+        if(turn) {//if it is black checkers turn
+            for (int r = 0; r < checkerList.length; r++) {
+                for (int c = 0; c < checkerList[r].length; c++) {
+                    if (checkerList[r][c] instanceof RedChecker) {//if the checker is red (disable all the redCheckers)
+                        imageButtonList[r][c].setClickable(false);
+                        //imageButtonList[r][c].setBackgroundColor(Color.BLACK);
+                    }
+                    if(checkerList[r][c] instanceof BlackChecker){//disable the unmovable blackCheckers
+                        if(r == 0){//if the blackChecker is at row 0 (crown)
+                            imageButtonList[r][c].setClickable(true);
+                        }
+                        else {
+                            if (c == 0){
+                                if(checkerList[r - 1][c + 1] instanceof BlackChecker) { //if the blackChecker is at column 0 and there is one blackChecker at upper right
+                                    imageButtonList[r][c].setClickable(false);
+                                    //imageButtonList[r][c].setBackgroundColor(Color.BLACK);
+                                }
+                            }
+                            else if (c == 7){
+                                if(checkerList[r - 1][c - 1] instanceof BlackChecker) {//if the blackChecker is at column 7 and there is one blackChecker at upper left
+                                    imageButtonList[r][c].setClickable(false);
+                                    //imageButtonList[r][c].setBackgroundColor(Color.BLACK);
+                                }
+                            } else {//if the blackChecker is located at column 1 - 6
+                                if (checkerList[r - 1][c - 1] instanceof BlackChecker && checkerList[r - 1][c + 1] instanceof BlackChecker) {//if there are blackCheckers on both upper left and right
+                                    imageButtonList[r][c].setClickable(false);
+                                    //imageButtonList[r][c].setBackgroundColor(Color.BLACK);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        else{//if it is red checkers turn
+            for (int r = 0; r < checkerList.length; r++) {
+                for (int c = 0; c < checkerList[r].length; c++) {
+                    if (checkerList[r][c] instanceof BlackChecker) {//if the checker is black (disable all the blackCheckers)
+                        imageButtonList[r][c].setClickable(false);
+                        //imageButtonList[r][c].setBackgroundColor(Color.BLACK);
+                    }
+                    if(checkerList[r][c] instanceof RedChecker) {//disable the unmovable red Checkers
+                        if (r == 7) {//if the red checker is at row 7 (crown)
+                            imageButtonList[r][c].setClickable(true);
+                        } else {
+                            if (c == 0) {
+                                if (checkerList[r + 1][c + 1] instanceof RedChecker) { //if the red Checker is at column 0 and there is one redChecker at upper right
+                                    imageButtonList[r][c].setClickable(false);
+                                    //imageButtonList[r][c].setBackgroundColor(Color.BLACK);
+                                }
+                            } else if (c == 7) {
+                                if (checkerList[r + 1][c - 1] instanceof RedChecker) {//if the blackChecker is at column 7 and there is one blackChecker at upper left
+                                    imageButtonList[r][c].setClickable(false);
+                                    //imageButtonList[r][c].setBackgroundColor(Color.BLACK);
+                                }
+                            } else {//if the blackChecker is located at column 1 - 6
+                                if (checkerList[r + 1][c - 1] instanceof RedChecker && checkerList[r + 1][c + 1] instanceof RedChecker) {//if there are blackCheckers on both upper left and right
+                                    imageButtonList[r][c].setClickable(false);
+                                    //imageButtonList[r][c].setBackgroundColor(Color.BLACK);
+                                }
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
 
     }
 }
