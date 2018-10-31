@@ -28,6 +28,13 @@ public class BlackChecker extends Checker {
                     possibleMove.add(new int []{getRow() - 1, getColumn() - 1});
                     possibleMove.add(new int []{getRow() - 1, getColumn() + 1});
                 }
+                if(!(checkerList[getRow() - 1][getColumn() - 1] instanceof BlackChecker) && (checkerList[getRow() - 1][getColumn() + 1] instanceof BlackChecker)){
+                    possibleMove.add(new int []{getRow() - 1, getColumn() - 1});
+                }
+
+                if ((checkerList[getRow() - 1][getColumn() - 1] instanceof BlackChecker) && !(checkerList[getRow() - 1][getColumn() + 1] instanceof BlackChecker)){
+                    possibleMove.add(new int []{getRow() - 1, getColumn() + 1});
+                }
             }
         }
         else{//the black checker received the crown
