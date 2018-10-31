@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                              {null, new BlackChecker(6,1), null, new BlackChecker(6,3), null, new BlackChecker(6,5), null, new BlackChecker(7,7)},
                              {new BlackChecker(7,0), null, new BlackChecker(7,2),null, new BlackChecker(7,4), null, new BlackChecker(7,6), null}
                             };
-
+        resetAllButtons();
         disableButtons();
     }
 
@@ -215,10 +215,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 if (checkerList[r][c] instanceof BlackChecker) {//if clicked checker is a blackChecker
                                     possibleMove = checkerList[r][c].getMove(checkerList);//get the possibleMove from BlackChecker class
                                     for (int i = 0; i < possibleMove.size(); i++) {//go through the possibleMove
-                                        int row = possibleMove.get(i)[0];//get each row
-                                        int column = possibleMove.get(i)[1];//get each column
+                                        final int row = possibleMove.get(i)[0];//get each row
+                                        final int column = possibleMove.get(i)[1];//get each column
                                         imageButtonList[row][column].setClickable(true);//make the possible places clickable
                                         imageButtonList[row][column].setBackgroundColor(Color.WHITE);
+                                        final int finalR = r;
+                                        final int finalC = c;
                                         imageButtonList[row][column].setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View view) {
@@ -228,9 +230,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                                 if (secondClick == false) {
                                                     ImageButton ibtn = findViewById(view.getId());
                                                     secondClick = true;
+                                                    checkerList[row][column] = checkerList[finalR][finalC];
+                                                    checkerList[finalR][finalC] = null;
+                                                    checkerList[row][column].setRow(row);
+                                                    checkerList[row][column].setColumn(column);
                                                     resetAllButtons();
                                                     disableButtons();
-                                                    ibtn.setBackgroundColor(Color.BLACK);
+
                                                 }
                                             }
                                         });
@@ -242,6 +248,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 }
             }
+        }
+        else{
+
         }
 
     }
@@ -335,6 +344,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             for (int c = 0; c < imageButtonList[r].length; c++) {
                 if(imageButtonList[r][c] != null){
                     imageButtonList[r][c].setClickable(true);
+                    imageButtonList[r][c].setImageDrawable(null);
+                    if(checkerList[r][c] != null) {
+                        if (checkerList[r][c] instanceof BlackChecker) {
+                            imageButtonList[r][c].setImageResource(R.drawable.black_dot);
+                        }
+                        if (checkerList[r][c] instanceof RedChecker) {
+                            imageButtonList[r][c].setImageResource(R.drawable.red_dot);
+                        }
+                    }
                     imageButtonList[r][c].setBackgroundColor(Color.parseColor("#c9af98"));
                 }
             }
