@@ -9,6 +9,7 @@ public class RedChecker extends Checker {
 
     @Override
     public ArrayList<int[]> getMove(Checker[][] checkerList){
+        boolean search = true;
 
         ArrayList <int[]> possibleMove = new ArrayList<>();
 
@@ -23,7 +24,8 @@ public class RedChecker extends Checker {
                     possibleMove.add(new int[]{getRow() + 1, getColumn() - 1});
                 }
             }
-            else{
+            else{//column 1-6
+                //**********Encounter black checkers************
                 if (!(checkerList[getRow() + 1][getColumn() + 1] instanceof RedChecker) && !(checkerList[getRow() + 1][getColumn() - 1] instanceof RedChecker)){
                     possibleMove.add(new int []{getRow() + 1, getColumn() + 1});
                     possibleMove.add(new int []{getRow() + 1, getColumn() - 1});
@@ -34,13 +36,21 @@ public class RedChecker extends Checker {
                 if ((checkerList[getRow() + 1][getColumn() + 1] instanceof RedChecker) && !(checkerList[getRow() + 1][getColumn() - 1] instanceof RedChecker)){
                     possibleMove.add(new int []{getRow() + 1, getColumn() - 1});
                 }
+                //**********Encounter red checkers************
+                //TODO implement a condition where when the redChecker sees redCheckers
+                //possibleMove.add(recursiveSearch(getRow(),getColumn(),checkerList));
             }
+
         }
         else{//the red checker received the crown
 
         }
 
         return possibleMove;
+    }
+
+    public int [] recursiveSearch(int r, int c, Checker[][] checkerList){
+        return null;
     }
 }
 

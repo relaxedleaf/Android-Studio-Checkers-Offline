@@ -23,8 +23,9 @@ public class BlackChecker extends Checker {
                     possibleMove.add(new int[]{getRow() - 1, getColumn() - 1});
                 }
             }
-            else{
-                if (!(checkerList[getRow() - 1][getColumn() - 1] instanceof BlackChecker) && !(checkerList[getRow() - 1][getColumn() + 1] instanceof BlackChecker)){
+            else{//blackChecker in column 1-6
+                //**********Encounter black checkers************
+                if (!(checkerList[getRow() - 1][getColumn() - 1] instanceof BlackChecker) && !(checkerList[getRow() - 1][getColumn() + 1] instanceof BlackChecker)){//--means upper left, -+means upper right
                     possibleMove.add(new int []{getRow() - 1, getColumn() - 1});
                     possibleMove.add(new int []{getRow() - 1, getColumn() + 1});
                 }
@@ -35,6 +36,9 @@ public class BlackChecker extends Checker {
                 if ((checkerList[getRow() - 1][getColumn() - 1] instanceof BlackChecker) && !(checkerList[getRow() - 1][getColumn() + 1] instanceof BlackChecker)){
                     possibleMove.add(new int []{getRow() - 1, getColumn() + 1});
                 }
+                //**********Encounter Red checkers**************
+                //TODO implement a condition where when the blackChecker sees redCheckers
+
             }
         }
         else{//the black checker received the crown
