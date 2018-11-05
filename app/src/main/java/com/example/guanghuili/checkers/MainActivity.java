@@ -15,12 +15,14 @@ import java.util.List;
 //TODO 2. implement the else statement in onclick method
 //TODO 3. Create an alertdialog after either side is winning; asking user to either restart the game or go back to the main menu
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity {
     private ImageButton [][] imageButtonList;
     private Checker [][] checkerList;
     private ArrayList<int[]> possibleMove;
     private boolean turn = true; //true for black's turn, false for white's turn
     private boolean secondClick = false;
+    private int row;
+    private int column;
 
     //row 1
     private ImageButton ibtn_0_0;
@@ -207,10 +209,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    @Override
-    public void onClick(View view) {
-        //Log.d("Clicked", "Button clicked");
-        if(turn) {
+    public void myOnClick(View view) {
+        Log.d("Clicked", "Button clicked");
+        if (turn) {
             for (int r = 0; r < imageButtonList.length; r++) {
                 for (int c = 0; c < imageButtonList[r].length; c++) {
                     if (imageButtonList[r][c] != null) {//if imageButtonList[r][c] is not null
@@ -230,6 +231,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                         imageButtonList[row][column].setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View view) {//when the user clicked on which place he/she wants to move to
+                                                Log.d("Clicked", "Button clicked");
                                                 ImageButton ibtn = findViewById(view.getId());//get the clicked imageButton
                                                 //secondClick = true;//since it is being clicked, then change the secondClick to true
                                                 checkerList[row][column] = checkerList[finalR][finalC];//row and column are the position of the new position, copy the checker to the new position
@@ -248,38 +250,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 }
             }
-        }
-        else {
-            for (int r = 0; r < imageButtonList.length; r++) {
-                for (int c = 0; c < imageButtonList[r].length; c++) {
-                    if (imageButtonList[r][c] != null) {//if imageButtonList[r][c] is not null
-                        if (view.getId() == imageButtonList[r][c].getId()) {//get the r and c of the ibtn clicked
-                            if (checkerList[r][c] != null) {//if the corresponding location in the checkerList has a checker
-                                if (checkerList[r][c] instanceof RedChecker) {//if clicked checker is a blackChecker
-                                    possibleMove = checkerList[r][c].getMove(checkerList);//get the possibleMove from BlackChecker class
-                                    updateAllButtons();
-                                    disableButtons();
-                                    for (int i = 0; i < possibleMove.size(); i++) {//go through the possibleMove
-                                        final int row = possibleMove.get(i)[0];//get each row
-                                        final int column = possibleMove.get(i)[1];//get each column
-                                        imageButtonList[row][column].setClickable(true);//make the possible places clickable
-                                        imageButtonList[row][column].setBackgroundColor(Color.WHITE);
-                                        final int finalR = r;
-                                        final int finalC = c;
-                                        imageButtonList[row][column].setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View view) {//when the user clicked on which place he/she wants to move to
-                                                ImageButton ibtn = findViewById(view.getId());//get the clicked imageButton
-                                                //secondClick = true;//since it is being clicked, then change the secondClick to true
-                                                checkerList[row][column] = checkerList[finalR][finalC];//row and column are the position of the new position, copy the checker to the new position
-                                                checkerList[row][column].setRow(row);//update the checker's position(row)
-                                                checkerList[row][column].setColumn(column);//update the checker's position(column)
-                                                checkerList[finalR][finalC] = null;//delete the check in the old location
-                                                turn = true; //change it to black's turn
-                                                updateAllButtons();//update the layout and made all the buttons clickable
-                                                disableButtons();//disable unmovable buttons
-                                            }
-                                        });
+        } else {
+            if (secondClick == false) {
+                for (int r = 0; r < imageButtonList.length; r++) {
+                    for (int c = 0; c < imageButtonList[r].length; c++) {
+                        if (imageButtonList[r][c] != null) {//if imageButtonList[r][c] is not null
+                            if (view.getId() == imageButtonList[r][c].getId()) {//get the r and c of the ibtn clicked
+                                if (checkerList[r][c] != null) {//if the corresponding location in the checkerList has a checker
+                                    Log.d("Type", checkerList[r][c].getClass().toString());
+                                    if (checkerList[r][c] instanceof RedChecker) {//if clicked checker is a blackChecker
+                                        possibleMove = checkerList[r][c].getMove(checkerList);//get the possibleMove from BlackChecker class
+                                        Log.d("PossibleMove", String.valueOf(possibleMove.size()));
+                                        updateAllButtons();
+                                        disableButtons();
+                                        row = r;
+                                        column = c;
+                                        for (int i = 0; i < possibleMove.size(); i++) {//go through the possibleMove
+                                            int row = possibleMove.get(i)[0];//get each row
+                                            int column = possibleMove.get(i)[1];//get each column
+                                            imageButtonList[row][column].setClickable(true);//make the possible places clickable
+                                            imageButtonList[row][column].setBackgroundColor(Color.WHITE);
+                                        }
+                                        secondClick = true;
                                     }
                                 }
                             }
@@ -287,8 +279,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 }
             }
-        }
+            else {
+                for (int r = 0; r < imageButtonList.length; r++) {
+                    for (int c = 0; c < imageButtonList[r].length; c++) {
+                        if (imageButtonList[r][c] != null) {//if imageButtonList[r][c] is not null
+                            if (view.getId() == imageButtonList[r][c].getId()) {//get the r and c of the ibtn clicked
+                                checkerList[r][c] = new RedChecker(checkerList[row][column]);//row and column are the position of the new position, copy the checker to the new position
+                                checkerList[r][c].setRow(r);
+                                checkerList[r][c].setColumn(c);
+                                checkerList[row][column] = null;//delete the check in the old location
+                                turn = true; //change it to black's turn
+                                updateAllButtons();//update the layout and made all the buttons clickable
+                                disableButtons();//disable unmovable buttons
+                            }
+                        }
+                    }
+                }
+                secondClick = false;
 
+            }
+
+
+        }
     }
 
 
@@ -378,16 +390,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void updateAllButtons(){//update the whole layout based on the contents in checkerList, also make all the imageButtons clickable
         for(int r = 0; r < imageButtonList.length; r++) {
             for (int c = 0; c < imageButtonList[r].length; c++) {
-                if(imageButtonList[r][c] != null){//if the imageButton is not null
+                if (imageButtonList[r][c] != null) {//if the imageButton is not null
                     imageButtonList[r][c].setClickable(true);//make all the imageButtons clickable
                     imageButtonList[r][c].setImageDrawable(null);//Erase all the drawables and background color
-                    if(checkerList[r][c] != null) {//in the movable location if the checker in the checkerList is not null
+
+                    if (checkerList[r][c] != null) {//in the movable location if the checker in the checkerList is not null
                         if (checkerList[r][c] instanceof BlackChecker) {//if its a BlackChecker
-                                //TODO if(checkerList[r][c].getCrownStatus == true)
+                            //TODO if(checkerList[r][c].getCrownStatus == true)
                             imageButtonList[r][c].setImageResource(R.drawable.black_dot);//change the image to black dot
                         }
                         if (checkerList[r][c] instanceof RedChecker) {//if its a RedChecker
-                                //TODO if(checkerList[r][c].getCrownStatus == true)
+                            //TODO if(checkerList[r][c].getCrownStatus == true)
                             imageButtonList[r][c].setImageResource(R.drawable.red_dot);//change the image to red dot
                         }
                     }

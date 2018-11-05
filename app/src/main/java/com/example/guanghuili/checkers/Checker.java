@@ -13,6 +13,12 @@ public class Checker {
         this.crownStatus = false;
     }
 
+    public Checker(Checker checker){
+        this.row = checker.getRow();
+        this.column = checker.getColumn();
+        this.crownStatus = checker.isCrownStatus();
+    }
+
     public int getRow() {
         return row;
     }
