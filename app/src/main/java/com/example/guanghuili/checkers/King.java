@@ -174,6 +174,25 @@ public class King extends Piece {
         //*************************************************************************
         //still needs to check knights, kings, and pawns
         //*************************************************************************
+
+        //Check for King
+
+        for(int i = column - 1; i <= column + 1; i++){
+            for(int j = row - 1; j <= row + 1; j++){
+                if(i < 0 || i > 8 || j < 0 || j > 8){
+                    continue;
+                }
+                if(board[i][j] instanceof King){
+                    if(board[i][j].isBlack() == this.isBlack()){
+                        continue;
+                    }
+                    else{
+                        return true;
+                    }
+                }
+            }
+        }
+
         return false;
     }
 
