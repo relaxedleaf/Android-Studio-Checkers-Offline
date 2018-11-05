@@ -170,6 +170,10 @@ public class King extends Piece {
                     break;
             }
         }
+
+        //*************************************************************************
+        //still needs to check knights, kings, and pawns
+        //*************************************************************************
         return false;
     }
 
