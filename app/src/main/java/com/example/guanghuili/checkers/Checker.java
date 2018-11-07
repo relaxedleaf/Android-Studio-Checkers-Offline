@@ -46,4 +46,12 @@ public class Checker {
     public ArrayList<int[]> getMove(Checker[][] checkerList) {
         return null;
     }
+
+    public ArrayList<int[]> getMove2(Checker[][] checkerList) {
+        return null;
+    }
+
+    public ArrayList<int[]> getKillList() {
+        return null;
+    }
 }
