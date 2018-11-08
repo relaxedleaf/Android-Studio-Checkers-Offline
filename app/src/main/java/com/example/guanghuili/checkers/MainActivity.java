@@ -250,8 +250,7 @@ public class MainActivity extends AppCompatActivity {
                                                 for (int i = 0; i < possibleMove.size(); i++) {//go through the possibleMove
                                                     int row = possibleMove.get(i)[0];//get each row
                                                     int column = possibleMove.get(i)[1];//get each column
-                                                    imageButtonList[row][column].setClickable(true);//make the possible places clickable
-                                                    imageButtonList[row][column].setBackgroundColor(Color.WHITE);
+                                                    disableAllButPossible(possibleMove);
                                                 }
                                                 secondClick = true;
                                             }
@@ -260,6 +259,7 @@ public class MainActivity extends AppCompatActivity {
                                                 turn = false;
                                                 updateAllButtons();
                                                 disableAllButOneButton(r, c);
+                                                disableAllButOneButton = true;
                                             }
                                         }
                                     }
@@ -364,8 +364,7 @@ public class MainActivity extends AppCompatActivity {
                                                 for (int i = 0; i < possibleMove.size(); i++) {//go through the possibleMove
                                                     int row = possibleMove.get(i)[0];//get each row
                                                     int column = possibleMove.get(i)[1];//get each column
-                                                    imageButtonList[row][column].setClickable(true);//make the possible places clickable
-                                                    imageButtonList[row][column].setBackgroundColor(Color.WHITE);
+                                                    disableAllButPossible(possibleMove);
                                                 }
                                                 secondClick = true;
                                             }
@@ -374,6 +373,7 @@ public class MainActivity extends AppCompatActivity {
                                                 turn = true;
                                                 updateAllButtons();
                                                 disableAllButOneButton(r, c);
+                                                disableAllButOneButton = true;
                                             }
                                         }
                                     }
@@ -536,6 +536,25 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         imageButtonList[row][column].setClickable(true);
+    }
+
+    public void disableAllButPossible(ArrayList <int[]> possiblemove){
+        updateAllButtons();
+        for (int r = 0; r < imageButtonList.length; r++) {
+            for (int c = 0; c < imageButtonList[r].length; c++) {
+                if(imageButtonList[r][c] != null) {
+                    imageButtonList[r][c].setClickable(false);
+                }
+            }
+        }
+        for (int i = 0; i < possibleMove.size(); i++) {//go through the possibleMove
+            int row = possibleMove.get(i)[0];//get each row
+            int column = possibleMove.get(i)[1];//get each column
+            imageButtonList[row][column].setClickable(true);//make the possible places clickable
+            imageButtonList[row][column].setBackgroundColor(Color.WHITE);
+        }
+
+
     }
 
     public void updateAllButtons(){//update the whole layout based on the contents in checkerList, also make all the imageButtons clickable
