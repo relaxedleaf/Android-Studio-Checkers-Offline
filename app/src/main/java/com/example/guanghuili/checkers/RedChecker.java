@@ -28,6 +28,16 @@ public class RedChecker extends Checker {
     }
 
     public void recursiveSearch(int r, int c, Checker[][]checkerList){
+        if(isCrownStatus() == false){
+            recursiveSearchNotCrown(r, c, checkerList);
+        }
+        else{
+            recursiveSearchNotCrown(r, c, checkerList);
+            recursiveSearchCrown(r, c, checkerList);
+        }
+    }
+
+    public void recursiveSearchNotCrown(int r, int c, Checker[][]checkerList){
         if(c == 0 && r < 7) {
             if (!(checkerList[r + 1][c + 1] instanceof RedChecker)) { //if the redChecker is at column 0 and there is not one redChecker at lower right
                 if(checkerList[r + 1][c + 1] instanceof BlackChecker){
@@ -102,6 +112,77 @@ public class RedChecker extends Checker {
         }
     }
 
+    public void recursiveSearchCrown(int r, int c, Checker[][]checkerList){
+        if (c == 0 && r > 0) {
+            if (!(checkerList[r - 1][c + 1] instanceof RedChecker)) {
+                if (checkerList[r - 1][c + 1] instanceof BlackChecker) {
+                    if (r - 2 >= 0) {
+                        if (checkerList[r - 2][c + 2] == null) {
+                            possibleMove.add(new int[]{r - 2, c + 2});
+                            killList.add(new int[]{r - 1, c + 1});
+                            //recursiveSearch(r - 2, c + 2, checkerList);
+                        }
+                    }
+                } else {
+                    possibleMove.add(new int[]{r - 1, c + 1});
+                    killList.add(null);
+                }
+            }
+
+        } else if (c > 0 && c < 7 && r > 0) {
+            if (!(checkerList[r - 1][c - 1] instanceof RedChecker)) {
+                if (checkerList[r - 1][c - 1] instanceof BlackChecker) {
+                    if ((r - 2 >= 0) && (c - 2 >= 0)) {
+                        if (checkerList[r - 2][c - 2] == null) {
+                            possibleMove.add(new int[]{r - 2, c - 2});
+                            killList.add(new int[]{r - 1, c - 1});
+                            //recursiveSearch(r - 2, c - 2, checkerList);
+                        }
+                    }
+
+                } else {
+                    possibleMove.add(new int[]{r - 1, c - 1});
+                    killList.add(null);
+                }
+
+            }
+            if (!(checkerList[r - 1][c + 1] instanceof RedChecker)) {
+                if (checkerList[r - 1][c + 1] instanceof BlackChecker) {
+                    if ((r - 2 >= 0) && (c + 2 <= 7)) {
+                        if (checkerList[r - 2][c + 2] == null) {
+                            possibleMove.add(new int[]{r - 2, c + 2});
+                            killList.add(new int[]{r - 1, c + 1});
+                            //recursiveSearch(r - 2, c + 2, checkerList);//start a new search
+                        }
+                    }
+
+                } else {
+                    possibleMove.add(new int[]{r - 1, c + 1});
+                    killList.add(null);
+                }
+
+            }
+        } else {
+            if (c == 7 && r > 0) {
+                if (!(checkerList[r - 1][c - 1] instanceof RedChecker)) {
+                    if (checkerList[r - 1][c - 1] instanceof BlackChecker) {
+                        if (r + 2 >= 0) {
+                            if (checkerList[r - 2][c - 2] == null) {
+                                possibleMove.add(new int[]{r - 2, c - 2});
+                                killList.add(new int[]{r - 1, c - 1});
+                                //recursiveSearch(r - 2, c - 2, checkerList);
+                            }
+                        }
+                    } else {
+                        possibleMove.add(new int[]{r - 1, c - 1});
+                        killList.add(null);
+                    }
+                }
+            }
+        }
+    }
+
+
 
     @Override
     public ArrayList<int[]> getMove2(Checker[][] checkerList){
@@ -114,8 +195,17 @@ public class RedChecker extends Checker {
         return possibleMove;
     }
 
-
     public void recursiveSearch2(int r, int c, Checker[][]checkerList) {
+        if(isCrownStatus() == false){
+            recursiveSearch2NotCrown(r, c, checkerList);
+        }
+        else{
+            recursiveSearch2NotCrown(r, c, checkerList);
+            recursiveSearch2Crown(r, c, checkerList);
+        }
+    }
+
+    public void recursiveSearch2NotCrown(int r, int c, Checker[][]checkerList){
         if (c == 0 && r < 7) {
             if (!(checkerList[r + 1][c + 1] instanceof RedChecker)) { //if the redChecker is at column 0 and there is not one redChecker at lower right
                 if (checkerList[r + 1][c + 1] instanceof BlackChecker) {
@@ -165,6 +255,66 @@ public class RedChecker extends Checker {
                                 possibleMove.add(new int[]{r + 2, c - 2});
                                 killList.add(new int[]{r + 1, c - 1});
                                 //recursiveSearch(r + 2, c - 2, checkerList);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public void recursiveSearch2Crown(int r, int c, Checker[][]checkerList){
+        if(c == 0 && r > 0) {
+            if (!(checkerList[r - 1][c + 1] instanceof RedChecker)) {
+                if(checkerList[r - 1][c + 1] instanceof BlackChecker){
+                    if(r - 2 >= 0) {
+                        if (checkerList[r - 2][c + 2] == null) {
+                            possibleMove.add(new int[]{r - 2, c + 2});
+                            killList.add(new int[]{r - 1, c + 1});
+                            //recursiveSearch(r - 2, c + 2, checkerList);
+                        }
+                    }
+                }
+            }
+
+        }
+        else if(c > 0 && c < 7 && r > 0){
+            if(!(checkerList[r - 1][c - 1] instanceof RedChecker)){
+                if(checkerList[r - 1][c - 1] instanceof BlackChecker){
+                    if ((r - 2 >= 0) && (c - 2 >= 0)) {
+                        if (checkerList[r - 2][c - 2] == null) {
+                            possibleMove.add(new int[]{r - 2, c - 2});
+                            killList.add(new int[]{r - 1, c - 1});
+                            //recursiveSearch(r - 2, c - 2, checkerList);
+                        }
+                    }
+
+                }
+
+            }
+            if(!(checkerList[r - 1][c + 1] instanceof RedChecker)){
+                if(checkerList[r - 1][c + 1] instanceof BlackChecker){
+                    if ((r - 2 >= 0) && (c + 2 <= 7)) {
+                        if (checkerList[r - 2][c + 2] == null) {
+                            possibleMove.add(new int[]{r - 2, c + 2});
+                            killList.add(new int[]{r - 1, c + 1});
+                            //recursiveSearch(r - 2, c + 2, checkerList);//start a new search
+                        }
+                    }
+
+                }
+
+            }
+        }
+        else{
+            if(c == 7 && r > 0) {
+                if (!(checkerList[r - 1][c - 1] instanceof RedChecker)) {
+                    if (checkerList[r - 1][c - 1] instanceof BlackChecker) {
+                        if (r + 2 >= 0) {
+                            if (checkerList[r - 2][c - 2] == null) {
+                                possibleMove.add(new int[]{r - 2, c - 2});
+                                killList.add(new int[]{r - 1, c - 1});
+                                //recursiveSearch(r - 2, c - 2, checkerList);
                             }
                         }
                     }
