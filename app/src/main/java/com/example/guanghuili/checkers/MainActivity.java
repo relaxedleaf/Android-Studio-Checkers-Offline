@@ -280,6 +280,9 @@ public class MainActivity extends AppCompatActivity {
                                         checkerList[r][c] = new BlackChecker(checkerList[row][column]);//row and column are the position of the new position, copy the checker to the new position
                                         checkerList[r][c].setRow(r);
                                         checkerList[r][c].setColumn(c);
+                                        if(checkerList[r][c].getRow() == 0){
+                                            checkerList[r][c].setCrownStatus(true);
+                                        }
                                         checkerList[row][column] = null;//delete the checker in the old location
                                         killLocation = getKillCheckerLocation(r, c);
                                         Log.d("NoteKillRow",String.valueOf(r));
@@ -394,6 +397,9 @@ public class MainActivity extends AppCompatActivity {
                                         checkerList[r][c] = new RedChecker(checkerList[row][column]);//row and column are the position of the new position, copy the checker to the new position
                                         checkerList[r][c].setRow(r);
                                         checkerList[r][c].setColumn(c);
+                                        if(checkerList[r][c].getRow() == 7){
+                                            checkerList[r][c].setCrownStatus(true);
+                                        }
                                         checkerList[row][column] = null;//delete the check in the old location
                                         killLocation = getKillCheckerLocation(r,c);
                                         if(killLocation != null) {
@@ -440,7 +446,6 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
-
 
     public void disableButtons(){//disable unmovable checkers
         if(turn) {//if it is black checkers turn
@@ -566,12 +571,20 @@ public class MainActivity extends AppCompatActivity {
 
                     if (checkerList[r][c] != null) {//in the movable location if the checker in the checkerList is not null
                         if (checkerList[r][c] instanceof BlackChecker) {//if its a BlackChecker
-                            //TODO if(checkerList[r][c].getCrownStatus == true)
-                            imageButtonList[r][c].setImageResource(R.drawable.black_dot);//change the image to black dot
+                            if(checkerList[r][c].isCrownStatus() == false) {
+                                imageButtonList[r][c].setImageResource(R.drawable.black_dot);//change the image to black dot
+                            }
+                            else{
+                                imageButtonList[r][c].setImageResource(R.drawable.black_crown);
+                            }
                         }
                         if (checkerList[r][c] instanceof RedChecker) {//if its a RedChecker
-                            //TODO if(checkerList[r][c].getCrownStatus == true)
-                            imageButtonList[r][c].setImageResource(R.drawable.red_dot);//change the image to red dot
+                            if(checkerList[r][c].isCrownStatus() == false) {
+                                imageButtonList[r][c].setImageResource(R.drawable.red_dot);//change the image to red dot
+                            }
+                            else{
+                                imageButtonList[r][c].setImageResource(R.drawable.red_crown);
+                            }
                         }
                     }
                     imageButtonList[r][c].setBackgroundColor(Color.parseColor("#c9af98"));//set the desirable background color
