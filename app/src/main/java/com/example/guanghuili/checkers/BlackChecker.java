@@ -106,6 +106,7 @@ public class BlackChecker extends Checker {
     public ArrayList<int[]> getMove2(Checker[][] checkerList){
 
         possibleMove = new ArrayList<>();
+        killList = new ArrayList<>();
 
         recursiveSearch2(getRow(), getColumn(), checkerList);
         Log.d("PossibleMoves",String.valueOf(possibleMove.size()));
@@ -120,6 +121,7 @@ public class BlackChecker extends Checker {
                     if(r - 2 >= 0) {
                         if (checkerList[r - 2][c + 2] == null) {
                             possibleMove.add(new int[]{r - 2, c + 2});
+                            killList.add(new int[]{r - 1, c + 1});
                             //recursiveSearch(r - 2, c + 2, checkerList);
                         }
                     }
@@ -133,6 +135,7 @@ public class BlackChecker extends Checker {
                     if ((r - 2 >= 0) && (c - 2 >= 0)) {
                         if (checkerList[r - 2][c - 2] == null) {
                             possibleMove.add(new int[]{r - 2, c - 2});
+                            killList.add(new int[]{r - 1, c - 1});
                             //recursiveSearch(r - 2, c - 2, checkerList);
                         }
                     }
@@ -145,6 +148,7 @@ public class BlackChecker extends Checker {
                     if ((r - 2 >= 0) && (c + 2 <= 7)) {
                         if (checkerList[r - 2][c + 2] == null) {
                             possibleMove.add(new int[]{r - 2, c + 2});
+                            killList.add(new int[]{r - 1, c + 1});
                             //recursiveSearch(r - 2, c + 2, checkerList);//start a new search
                         }
                     }
@@ -160,6 +164,7 @@ public class BlackChecker extends Checker {
                         if (r + 2 >= 0) {
                             if (checkerList[r - 2][c - 2] == null) {
                                 possibleMove.add(new int[]{r - 2, c - 2});
+                                killList.add(new int[]{r - 1, c - 1});
                                 //recursiveSearch(r - 2, c - 2, checkerList);
                             }
                         }

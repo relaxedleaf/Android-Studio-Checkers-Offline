@@ -107,6 +107,7 @@ public class RedChecker extends Checker {
     public ArrayList<int[]> getMove2(Checker[][] checkerList){
 
         possibleMove = new ArrayList<>();
+        killList = new ArrayList<>();
 
         recursiveSearch2(getRow(), getColumn(), checkerList);
 
@@ -121,6 +122,7 @@ public class RedChecker extends Checker {
                     if (r + 2 <= 7) {
                         if (checkerList[r + 2][c + 2] == null) {
                             possibleMove.add(new int[]{r + 2, c + 2});
+                            killList.add(new int[]{r + 1, c + 1});
                             //recursiveSearch(r + 2, c + 2, checkerList);
                         }
                     }
@@ -133,6 +135,7 @@ public class RedChecker extends Checker {
                     if ((r + 2 <= 7) && (c - 2 >= 0)) {
                         if (checkerList[r + 2][c - 2] == null) {//if the lower left of the lower left is not null
                             possibleMove.add(new int[]{r + 2, c - 2});//add the position to the possibleMove
+                            killList.add(new int[]{r + 1, c - 1});
                             //recursiveSearch(r + 2, c - 2, checkerList);//start a new search
                         }
                     }
@@ -145,6 +148,7 @@ public class RedChecker extends Checker {
                     if ((r + 2 <= 7) && (c + 2 <= 7)) {
                         if (checkerList[r + 2][c + 2] == null) {//if the lower right of the lower right is not null
                             possibleMove.add(new int[]{r + 2, c + 2});//add the position to the possibleMove
+                            killList.add(new int[]{r + 1, c + 1});
                             //recursiveSearch(r + 2, c + 2, checkerList);//start a new search
                         }
                     }
@@ -159,6 +163,7 @@ public class RedChecker extends Checker {
                         if (r + 2 <= 7) {
                             if (checkerList[r + 2][c - 2] == null) {
                                 possibleMove.add(new int[]{r + 2, c - 2});
+                                killList.add(new int[]{r + 1, c - 1});
                                 //recursiveSearch(r + 2, c - 2, checkerList);
                             }
                         }

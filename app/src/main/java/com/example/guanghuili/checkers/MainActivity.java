@@ -13,9 +13,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-//TODO 1. implement the getMove method in RedChecker
-//TODO 2. implement the else statement in onclick method
-//TODO 3. Create an alertdialog after either side is winning; asking user to either restart the game or go back to the main menu
+//TODO 1. Edit DisableAllbuttonButOne or update
+//TODO 2. Create an alertdialog after either side is winning; asking user to either restart the game or go back to the main menu
 
 public class MainActivity extends AppCompatActivity {
     private ImageButton [][] imageButtonList;
@@ -25,9 +24,10 @@ public class MainActivity extends AppCompatActivity {
     private int [] killLocation;
     private boolean turn = true; //true for black's turn, false for white's turn
     private boolean secondClick = false;
+    private boolean destroyed = false;
     private int row;
     private int column;
-    private boolean disableAllButOneButton;
+    private boolean disableAllButOneButton = false;
 
     //row 1
     private ImageButton ibtn_0_0;
@@ -206,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
                              {null, null, null, null,null, null,null, null},
                              {null, null, null, null,null, null,null, null},
                              {new BlackChecker(5,0), null, new BlackChecker(5,2),null, new BlackChecker(5,4), null, new BlackChecker(5,6), null},
-                             {null, new BlackChecker(6,1), null, new BlackChecker(6,3), null, new BlackChecker(6,5), null, new BlackChecker(7,7)},
+                             {null, new BlackChecker(6,1), null, new BlackChecker(6,3), null, new BlackChecker(6,5), null, new BlackChecker(6,7)},
                              {new BlackChecker(7,0), null, new BlackChecker(7,2),null, new BlackChecker(7,4), null, new BlackChecker(7,6), null}
                             };
         updateAllButtons();
@@ -215,89 +215,120 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void myOnClick(View view) {
-        Log.d("Clicked", "Button clicked");
-        if (turn) {
-            if(secondClick == false) {
+        if (turn) {//BlackChecker's turn
+            if(secondClick == false) {//(first click)
                 for (int r = 0; r < imageButtonList.length; r++) {
                     for (int c = 0; c < imageButtonList[r].length; c++) {
                         if (imageButtonList[r][c] != null) {//if imageButtonList[r][c] is not null
                             if (view.getId() == imageButtonList[r][c].getId()) {//get the r and c of the ibtn clicked
                                 if (checkerList[r][c] != null) {//if the corresponding location in the checkerList has a checker
                                     if (checkerList[r][c] instanceof BlackChecker) {//if clicked checker is a blackChecker
-                                        possibleMove = checkerList[r][c].getMove(checkerList);//get the possibleMove from BlackChecker class
-                                        killList = checkerList[r][c].getKillList();//get the corresponding killList
-                                        updateAllButtons();
-                                        if (disableAllButOneButton == false) {
-                                            disableButtons();
-                                        }
-                                        disableAllButOneButton = true;
                                         row = r;
                                         column = c;
-                                        for (int i = 0; i < possibleMove.size(); i++) {//go through the possibleMove
-                                            int row = possibleMove.get(i)[0];//get each row
-                                            int column = possibleMove.get(i)[1];//get each column
-                                            imageButtonList[row][column].setClickable(true);//make the possible places clickable
-                                            imageButtonList[row][column].setBackgroundColor(Color.WHITE);
-                                        }
-                                        secondClick = true;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            else {
-                for (int r = 0; r < imageButtonList.length; r++) {
-                    for (int c = 0; c < imageButtonList[r].length; c++) {
-                        if (imageButtonList[r][c] != null) {
-                            if (!(checkerList[r][c] instanceof RedChecker)) {
-                                if (checkerList[r][c] == null) {
-                                    if (view.getId() == imageButtonList[r][c].getId()) {
-                                        checkerList[r][c] = new BlackChecker(checkerList[row][column]);//row and column are the position of the new position, copy the checker to the new position
-                                        checkerList[r][c].setRow(r);
-                                        checkerList[r][c].setColumn(c);
-                                        checkerList[row][column] = null;//delete the check in the old location
-                                        killLocation = getKillCheckerLocation(r,c);
-                                        if(killLocation != null) {
-                                            checkerList[killLocation[0]][killLocation[1]] = null;
-                                        }
-                                        updateAllButtons();
-                                        disableButtons();
-                                        possibleMove = checkerList[r][c].getMove2(checkerList);//get the possibleMove from BlackChecker class
-                                        if (possibleMove.size() != 0) {
+                                        Log.d("NoteSaveRow",String.valueOf(row));
+                                        Log.d("NoteSaveColumn",String.valueOf(column));
+                                        if (destroyed == false) {
+                                            possibleMove = checkerList[r][c].getMove(checkerList);//get the possibleMove from BlackChecker class
+                                            killList = checkerList[r][c].getKillList();//get the corresponding killList
+                                            if (disableAllButOneButton == false) {
+                                                updateAllButtons();
+                                                disableButtons();
+                                            }
                                             for (int i = 0; i < possibleMove.size(); i++) {//go through the possibleMove
                                                 int row = possibleMove.get(i)[0];//get each row
                                                 int column = possibleMove.get(i)[1];//get each column
                                                 imageButtonList[row][column].setClickable(true);//make the possible places clickable
                                                 imageButtonList[row][column].setBackgroundColor(Color.WHITE);
                                             }
-                                            turn = true;
-                                            updateAllButtons();
-                                            disableAllButOneButton(r, c);
-                                            disableAllButOneButton = true;
-                                        } else {
-                                            turn = false;
-                                            secondClick = false;
-                                            updateAllButtons();//update the layout and made all the buttons clickable
-                                            disableButtons();//disable unmovable buttons
+                                            secondClick = true;
+                                        }
+                                        else {
+                                            destroyed = false;
+                                            possibleMove = checkerList[r][c].getMove2(checkerList);//get the possibleMove from BlackChecker class
+                                            if (possibleMove.size() != 0) {
+                                                for (int i = 0; i < possibleMove.size(); i++) {//go through the possibleMove
+                                                    int row = possibleMove.get(i)[0];//get each row
+                                                    int column = possibleMove.get(i)[1];//get each column
+                                                    imageButtonList[row][column].setClickable(true);//make the possible places clickable
+                                                    imageButtonList[row][column].setBackgroundColor(Color.WHITE);
+                                                }
+                                                secondClick = true;
+                                            }
+                                            else {
+                                                secondClick = false;
+                                                turn = false;
+                                                updateAllButtons();
+                                                disableAllButOneButton(r, c);
+                                            }
                                         }
                                     }
-
+                                    break;
                                 }
-                            }
-                        }
-                        else{
-                                updateAllButtons();//update the layout and made all the buttons clickable
-                                disableButtons();
-                                secondClick = false;
                             }
                         }
                     }
                 }
             }
-        else {
-            if (secondClick == false) {
+            else {//BlackChecker's turn (Second Click)
+                for (int r = 0; r < imageButtonList.length; r++) {
+                    for (int c = 0; c < imageButtonList[r].length; c++) {
+                        if (imageButtonList[r][c] != null) {
+                            if (!(checkerList[r][c] instanceof RedChecker)) {
+                                if (view.getId() == imageButtonList[r][c].getId()) {
+                                    if (checkerList[r][c] == null) {
+                                        checkerList[r][c] = new BlackChecker(checkerList[row][column]);//row and column are the position of the new position, copy the checker to the new position
+                                        checkerList[r][c].setRow(r);
+                                        checkerList[r][c].setColumn(c);
+                                        checkerList[row][column] = null;//delete the checker in the old location
+                                        killLocation = getKillCheckerLocation(r, c);
+                                        Log.d("NoteKillRow",String.valueOf(r));
+                                        Log.d("NoteKillColumn",String.valueOf(c));
+                                        if (killLocation != null) {
+                                            Log.d("Note",String.valueOf(killLocation.length));
+                                            checkerList[killLocation[0]][killLocation[1]] = null;
+                                            Log.d("NoteRow",String.valueOf(killLocation[0]));
+                                            Log.d("NoteColumn",String.valueOf(killLocation[1]));
+                                            destroyed = true;
+                                            secondClick = false;
+                                            updateAllButtons();
+                                            possibleMove = checkerList[r][c].getMove2(checkerList);
+                                            if(possibleMove.size() == 0){
+                                                disableAllButOneButton = false;
+                                                destroyed = false;
+                                                turn = false;
+                                                disableButtons();
+                                            }
+                                            else{
+                                                turn = true;
+                                                disableAllButOneButton(r, c);
+                                                disableAllButOneButton = true;
+                                            }
+                                        }
+                                        else{
+                                            disableAllButOneButton = false;
+                                            destroyed = false;
+                                            secondClick = false;
+                                            turn = false;
+                                            updateAllButtons();
+                                            disableButtons();
+                                        }
+                                        break;
+                                    }
+                                    else {//**for the user who wants to change his/her moves
+                                        updateAllButtons();//update the layout and made all the buttons clickable
+                                        disableButtons();
+                                        secondClick = false;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        else {//RedChecker's turn
+            if (secondClick == false) {//(First Click)
                 for (int r = 0; r < imageButtonList.length; r++) {
                     for (int c = 0; c < imageButtonList[r].length; c++) {
                         if (imageButtonList[r][c] != null) {//if imageButtonList[r][c] is not null
@@ -305,37 +336,58 @@ public class MainActivity extends AppCompatActivity {
                                 if (checkerList[r][c] != null) {//if the corresponding location in the checkerList has a checker
                                     Log.d("Type", checkerList[r][c].getClass().toString());
                                     if (checkerList[r][c] instanceof RedChecker) {//if clicked checker is a blackChecker
-                                        possibleMove = checkerList[r][c].getMove(checkerList);//get the possibleMove from BlackChecker class
-                                        killList = checkerList[r][c].getKillList();//get the corresponding killList
-                                        Log.d("PossibleMove", String.valueOf(possibleMove.size()));
-                                        updateAllButtons();
-                                        if(disableAllButOneButton == false) {
-                                            disableButtons();
-                                        }
-                                        disableAllButOneButton = true;
                                         row = r;
                                         column = c;
-                                        for (int i = 0; i < possibleMove.size(); i++) {//go through the possibleMove
-                                            int row = possibleMove.get(i)[0];//get each row
-                                            int column = possibleMove.get(i)[1];//get each column
-                                            imageButtonList[row][column].setClickable(true);//make the possible places clickable
-                                            imageButtonList[row][column].setBackgroundColor(Color.WHITE);
+                                        if (destroyed == false) {
+                                            possibleMove = checkerList[r][c].getMove(checkerList);//get the possibleMove from BlackChecker class
+                                            killList = checkerList[r][c].getKillList();//get the corresponding killList
+                                            Log.d("PossibleMove", String.valueOf(possibleMove.size()));
+                                            if (disableAllButOneButton == false) {
+                                                updateAllButtons();
+                                                disableButtons();
+                                            }
+                                            for (int i = 0; i < possibleMove.size(); i++) {//go through the possibleMove
+                                                int row = possibleMove.get(i)[0];//get each row
+                                                int column = possibleMove.get(i)[1];//get each column
+                                                imageButtonList[row][column].setClickable(true);//make the possible places clickable
+                                                imageButtonList[row][column].setBackgroundColor(Color.WHITE);
+                                            }
+                                            secondClick = true;
                                         }
-                                        secondClick = true;
+                                        else {
+                                            destroyed = false;
+                                            possibleMove = checkerList[r][c].getMove2(checkerList);//get the possibleMove from BlackChecker class
+                                            if (possibleMove.size() != 0) {
+                                                for (int i = 0; i < possibleMove.size(); i++) {//go through the possibleMove
+                                                    int row = possibleMove.get(i)[0];//get each row
+                                                    int column = possibleMove.get(i)[1];//get each column
+                                                    imageButtonList[row][column].setClickable(true);//make the possible places clickable
+                                                    imageButtonList[row][column].setBackgroundColor(Color.WHITE);
+                                                }
+                                                secondClick = true;
+                                            }
+                                            else {
+                                                secondClick = false;
+                                                turn = true;
+                                                updateAllButtons();
+                                                disableAllButOneButton(r, c);
+                                            }
+                                        }
                                     }
+                                    break;
                                 }
                             }
                         }
                     }
                 }
             }
-            else {
+            else {//RedChecker's turn (Second Click)
                 for (int r = 0; r < imageButtonList.length; r++) {
                     for (int c = 0; c < imageButtonList[r].length; c++) {
                         if (imageButtonList[r][c] != null) {//if imageButtonList[r][c] is not null
                             if (!(checkerList[r][c] instanceof BlackChecker)) {
-                                if(checkerList[r][c] == null) {
-                                    if (view.getId() == imageButtonList[r][c].getId()) {//get the r and c of the ibtn clicked
+                                if (view.getId() == imageButtonList[r][c].getId()) {//get the r and c of the ibtn clicked
+                                    if(checkerList[r][c] == null) {
                                         checkerList[r][c] = new RedChecker(checkerList[row][column]);//row and column are the position of the new position, copy the checker to the new position
                                         checkerList[r][c].setRow(r);
                                         checkerList[r][c].setColumn(c);
@@ -343,35 +395,38 @@ public class MainActivity extends AppCompatActivity {
                                         killLocation = getKillCheckerLocation(r,c);
                                         if(killLocation != null) {
                                             checkerList[killLocation[0]][killLocation[1]] = null;
-                                        }
-                                        updateAllButtons();
-                                        disableButtons();
-
-                                        possibleMove = checkerList[r][c].getMove2(checkerList);//get the possibleMove from BlackChecker class
-                                        if(possibleMove.size() != 0){
-                                            for (int i = 0; i < possibleMove.size(); i++) {//go through the possibleMove
-                                                int row = possibleMove.get(i)[0];//get each row
-                                                int column = possibleMove.get(i)[1];//get each column
-                                                imageButtonList[row][column].setClickable(true);//make the possible places clickable
-                                                imageButtonList[row][column].setBackgroundColor(Color.WHITE);
-                                            }
-                                            turn = false;
+                                            destroyed = true;
+                                            secondClick = false;
                                             updateAllButtons();
-                                            disableAllButOneButton(r, c);
-                                            disableAllButOneButton = true;
+                                            possibleMove = checkerList[r][c].getMove2(checkerList);
+                                            if(possibleMove.size() == 0){
+                                                disableAllButOneButton = false;
+                                                destroyed = false;
+                                                secondClick = false;
+                                                turn = true;
+                                                disableButtons();
+                                            }
+                                            else{
+                                                disableAllButOneButton(r, c);
+                                                disableAllButOneButton = true;
+                                            }
                                         }
                                         else{
-                                            turn = true; //change it to black's turn
+                                            disableAllButOneButton = false;
+                                            destroyed = false;
                                             secondClick = false;
-                                            updateAllButtons();//update the layout and made all the buttons clickable
-                                            disableButtons();//disable unmovable buttons
+                                            turn = true;
+                                            updateAllButtons();
+                                            disableButtons();
                                         }
+                                        break;
                                     }
-                                }
-                                else{
-                                    updateAllButtons();//update the layout and made all the buttons clickable
-                                    disableButtons();
-                                    secondClick = false;
+                                    else {
+                                        updateAllButtons();//update the layout and made all the buttons clickable
+                                        disableButtons();
+                                        secondClick = false;
+                                        break;
+                                    }
                                 }
                             }
                         }
@@ -379,7 +434,6 @@ public class MainActivity extends AppCompatActivity {
                 }
 
             }
-
 
         }
     }
@@ -469,15 +523,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void disableAllButOneButton(int row, int column){
-        for (int r = 0; r < checkerList.length; r++) {
-            for (int c = 0; c < checkerList[r].length; c++) {
-                if (checkerList[r][c] != null) {
-                    if (r != row && c != column) {
-                        imageButtonList[r][c].setClickable(false);
-                    }
+        updateAllButtons();
+        Log.d("DisableAllButOneButton","called");
+        for (int r = 0; r < imageButtonList.length; r++) {
+            for (int c = 0; c < imageButtonList[r].length; c++) {
+                if(imageButtonList[r][c] != null) {
+                    imageButtonList[r][c].setClickable(false);
                 }
             }
         }
+        imageButtonList[row][column].setClickable(true);
     }
 
     public void updateAllButtons(){//update the whole layout based on the contents in checkerList, also make all the imageButtons clickable
@@ -506,9 +561,7 @@ public class MainActivity extends AppCompatActivity {
     public int [] getKillCheckerLocation(int rIndex, int cIndex){
         int [] location = new int [2];
         for (int i = 0; i < possibleMove.size(); i++){
-            Log.d("hello","hello");
             if(possibleMove.get(i)[0] == rIndex && possibleMove.get(i)[1] == cIndex){
-                Log.d("hello","fucker");
                 location = killList.get(i);
                 break;
             }
