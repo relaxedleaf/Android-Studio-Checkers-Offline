@@ -245,6 +245,7 @@ public class MainActivity extends AppCompatActivity {
                                         else {
                                             destroyed = false;
                                             possibleMove = checkerList[r][c].getMove2(checkerList);//get the possibleMove from BlackChecker class
+                                            killList = checkerList[r][c].getKillList();
                                             if (possibleMove.size() != 0) {
                                                 for (int i = 0; i < possibleMove.size(); i++) {//go through the possibleMove
                                                     int row = possibleMove.get(i)[0];//get each row
@@ -292,6 +293,7 @@ public class MainActivity extends AppCompatActivity {
                                             secondClick = false;
                                             updateAllButtons();
                                             possibleMove = checkerList[r][c].getMove2(checkerList);
+                                            Log.d("NotePossible",String.valueOf(possibleMove.size()));
                                             if(possibleMove.size() == 0){
                                                 disableAllButOneButton = false;
                                                 destroyed = false;
@@ -357,6 +359,7 @@ public class MainActivity extends AppCompatActivity {
                                         else {
                                             destroyed = false;
                                             possibleMove = checkerList[r][c].getMove2(checkerList);//get the possibleMove from BlackChecker class
+                                            killList = checkerList[r][c].getKillList();
                                             if (possibleMove.size() != 0) {
                                                 for (int i = 0; i < possibleMove.size(); i++) {//go through the possibleMove
                                                     int row = possibleMove.get(i)[0];//get each row
